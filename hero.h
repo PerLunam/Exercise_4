@@ -7,6 +7,9 @@
 
 #define MAX_EQUIPMENT_SIZE 2
 
+//Forward-Declaration der Class "NPC"
+class NPC;
+
 class Hero : public Character
 {
 private:
@@ -16,14 +19,7 @@ private:
 protected:
 
 public:
-    //Konstruktoren der Class "Hero"
-    /*
-    //Default
-    Hero() : char_name("Default-Hero")
-    {
-        std::cout << "Hero::Default-Constructor: " << char_name << std::endl;
-    }
-    */
+    //Konstruktor der Class "Hero"
 
     //Individueller Konstruktor
     Hero(const std::string &char_name, int char_health, int char_gold, int char_armor, int char_mr)
@@ -43,6 +39,11 @@ public:
     //Destruktor
     virtual ~Hero()
     {
+        for(int i = 0; i < MAX_EQUIPMENT_SIZE; ++i)
+        {
+            delete hero_gear[i];
+        }
+
         //Grafische Trennung der Inhalte
         std::cout << "------------------------------" << std::endl;
 
@@ -52,7 +53,7 @@ public:
     //----------------------------- Objektfunktionen -----------------------------
     virtual void attack(Character *enemy) override;
 
-    int addEquipmentItem(const Item& item);
+    int addEquipmentItem(const Item* item);
     Item* removeEquipmentItem(int slot);
 
     void sellItem(int index);

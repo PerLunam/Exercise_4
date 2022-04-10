@@ -9,6 +9,7 @@
 //----------------------------- Objektfunktionen -----------------------------
 bool Character::fight(Character *enemy)
 {
+    //Einleitungstext
     std::cout << enemy->getName() << " fordert " << this->getName() << " zu einem Kampf um Ruhm und Ehre heraus." << std::endl;
 
     //Lösung mithilfe einer Do-While-Loop
@@ -18,6 +19,7 @@ bool Character::fight(Character *enemy)
         enemy->attack(this);
     } while(this->getHealth() > 0 && enemy->getHealth() > 0);
 
+    //"Hero" gewinnt und schlägt "Enemy"
     std::cout << enemy->getName() << " fiel in Ohnmacht! " << this->getName() << " hat noch " << this->getHealth() << " Lebenspunkte." << std::endl;
 
     //Grafische Trennung der Inhalte
@@ -27,36 +29,62 @@ bool Character::fight(Character *enemy)
     return this->getHealth() > 0;
 }
 
+/*
 int Character::addInventarItem(const Item* item)
 {
     for(int i = 0; i < MAX_INVENTORY_SIZE; i++)
     {
-        if(!this->inventory[i].isIsValid())
+        //Prüfung, ob Index auf "nullptr" zeigt oder auf eine gültige Speicheradresse
+        //bei "false" zeigt der Index auf "nullptr" und wird nun korrekt initialisiert
+        if(!this->inventory[i])
         {
-            this->inventory[i].setName(item.getName());
-            this->inventory[i].setValue(item.getValue());
-            this->inventory[i].setIsValid(true);
+            this->inventory[i]->setName(item->getName());
+            this->inventory[i]->setValue(item->getValue());
 
             //Bei erfolgreicher Platzierung soll der Index des Items ausgegeben werden
             return i;
         }
     }
-    //Falls alle Plätze belegt sind oder der Platz falsch initialisiert ist, soll der Wert "-1" ausgegeben werden
-    return -1;
+    //Exception, falls alle Plätze belegt sind
+    throw InventarFullException("Character::addInventarItem(): Inventar ist bereits komplett belegt.");
+}
+*/
+
+int Character::addInventarItem(const Item *item)
+{
+    for(int i = 0; i < MAX_INVENTORY_SIZE; i++)
+    {
+        if(!this->inventory[i])
+        {
+            this->inventory[i]->setName(item->getName());
+            this->inventory[i]->setValue(item->getValue());
+
+            return i;
+        } else
+        {
+            //Exception, falls alle Plätze belegt sind
+            throw InventarFullException("Character::addInventarItem(): Inventar ist bereits komplett belegt.");
+        }
+    }
 }
 
 Item* Character::removeInventarItem(int slot)
 {
-    if(this->inventory[slot].isIsValid())
+    if(slot < 0 && slot > MAX_INVENTORY_SIZE)
     {
-        this->inventory[slot].setIsValid(false);
-        std::cout << "Item  \"" << this->inventory[slot].getName() << "\" wurde aus dem Inventar von " << this->getName() << " entfernt." << std::endl;
-        return this->inventory[slot];
+        //Passende Exception, wenn der eingegebene Indexwert außerhalb des Wertebereichs liegt
+        //TODO - warum kann "throw" nicht ausgeführt werden
+        throw InvalidIndexException("Character::removeInventarItem(): Der angegebene Indexwert liegt außerhalb des gültigen Wertebereichs.");
+    } else if(this->inventory[slot])
+    {
+        //Überschreiben des Slots mit "nullptr" mithilfe einer zusätzlichen Variablen "retValue"
+        Item* retValue = this->inventory[slot];
+        retValue = nullptr;
+        return retValue;
     } else
     {
-        //Falls alle Plätze belegt oder der Slot fehlerhaft initialisiert sein,
-        //wird der Default-Konstruktor verwendet und das Item "Default-Item" mit isValid "false" ausgegeben
-        return Item();
+        //Passende Exception, wenn der angegebene Indexwert auf "nullptr" zeigt
+        throw InvalidItemException("Character::removeInventarItem(): Unter dem angegebenen Index ist kein gültiges Item gespeichert.");
     }
 }
 
@@ -65,11 +93,11 @@ Item* Character::retrieveRandomLoot(Character *enemy)
     //Initialisierung eines Counters, welcher als Zahlenbasis für die Zufallszahlgenerierung dient
     int counter = -1;
 
-    //Für jedes ".isIsvalid == true" wird der counter um 1 erhöht
+    //Für jedes korrekt initialisierte Item wird "counter" um 1 erhöht
     //Max. Wert = 9, da MAX_INVENTORY_SIZE als Array[10] also mit Index von 0 bis 9 definiert ist
     for(int i = 0; i < MAX_INVENTORY_SIZE; i++)
     {
-        if(enemy->inventory[i].isIsValid())
+        if(enemy->inventory[i])
         {
             counter++;
         }
@@ -79,17 +107,18 @@ Item* Character::retrieveRandomLoot(Character *enemy)
     int rndNumber = rand() % (counter);
     //std::cout << "Zufallszahl = " << rndNumber << std::endl;
 
-    if(enemy->inventory[rndNumber].isIsValid())
+    if(enemy->inventory[rndNumber])
     {
-        //falls der Index korrekt initialisiert ist (isValid = "true"), soll das Item aus dem Inventar des Gegners entfernt ("removeInventarItem")
-        //und in das Inventar des Helden/ der Heldin beigefügt werden ("addInventarItem")
+        //falls der Index korrekt initialisiert ist, soll das Item aus dem Inventar des Gegners entfernt ("removeInventarItem")
+        //und dem Inventar des Helden/ der Heldin beigefügt werden ("addInventarItem")
 
         //Erster Versuch der Umsetzung, aber mit Fehler
-        //this->addInventarItem(&enemy->removeInventarItem(rndNumber));
+        //TODO - Funktion erneut testen
+        //this->addInventarItem(enemy->removeInventarItem(rndNumber));
 
         //Zweiter Versuch der Umsetzung
         //Deklaration einer Variablen für das Item an Index "rndNumber"
-        Item lootItem = enemy->inventory[rndNumber];
+        Item* lootItem = enemy->inventory[rndNumber];
 
         //Item wird aus dem Inventar des Gegners entfernt
         enemy->removeInventarItem(rndNumber);
@@ -97,8 +126,7 @@ Item* Character::retrieveRandomLoot(Character *enemy)
         //Das entsprechende Item wird dem Inventar des Helden/ der Heldin beigefügt
         this->addInventarItem(lootItem);
 
-        //std::cout << "Des einen Glück, des anderen Leid. " << this->getName() << " hat sich \"" << enemy->getInventory(rndNumber)->getName() << "\" redlich verdient." << std::endl;
-        std::cout << "Des einen Glück, des anderen Leid. " << this->getName() << " hat sich \"" << lootItem.getName() << "\" redlich verdient." << std::endl;
+        std::cout << "Des einen Glück, des anderen Leid. " << this->getName() << " hat sich \"" << lootItem->getName() << "\" redlich verdient." << std::endl;
 
         //Grafische Trennung der Inhalte
         std::cout << "------------------------------" << std::endl;
@@ -106,14 +134,14 @@ Item* Character::retrieveRandomLoot(Character *enemy)
         return lootItem;
     } else
     {
-        //Falls alle Plätze belegt oder der Slot fehlerhaft initialisiert sein,
-        //wird der Default-Konstruktor verwendet und das Item "Default-Item" mit isValid "false" ausgegeben
-        std::cout << "Kein Platz vorhanden. " << enemy->getInventory(rndNumber)->getName() << " bleibt " << this->getName() << " leider verwehrt." << std::endl;
+        //Exception, falls alle Plätze belegt sind
+        std::cout << "Kein Platz vorhanden. Gegenstand \"" << enemy->getInventory(rndNumber)->getName() << "\" bleibt " << this->getName() << " leider verwehrt." << std::endl;
 
         //Grafische Trennung der Inhalte
         std::cout << "------------------------------" << std::endl;
 
-        return Item();
+        throw InventarFullException("Character::retrieveRandomLoot(): Inventar ist bereits komplett belegt.");
+        //return Item();
     }
 }
 
@@ -140,7 +168,8 @@ int Character::getHealth() const
 
 void Character::setHealth(int newHealth)
 {
-    //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer gleich 0
+    //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer 0
+    //andernfalls wird "Health" mit 0 initialisiert
     if(newHealth > 0)
     {
         this->char_health = newHealth;
@@ -157,7 +186,7 @@ int Character::getGold() const
 
 void Character::setGold(int newGold)
 {
-    //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer gleich 0
+    //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer oder gleich 0
     if(newGold >= 0)
     {
         this->char_gold = newGold;
@@ -171,7 +200,7 @@ int Character::getArmor() const
 
 void Character::setArmor(int newArmor)
 {
-    //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer gleich 0
+    //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer oder gleich 0
     if(newArmor >= 0)
     {
         this->char_armor = newArmor;
@@ -187,7 +216,7 @@ void Character::setMR(int newMR)
 {
     if(newMR >= 0)
     {
-        //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer gleich 0
+        //Prüfung, ob die Eingabe einen korrekten Wert enthält, d. h. einen Wert größer oder gleich 0
         this->char_mr = newMR;
     }
 }

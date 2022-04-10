@@ -7,6 +7,7 @@
 
 #include "item.h"
 #include "type.h"
+#include "exception.h"
 
 #define MAX_INVENTORY_SIZE 10
 
@@ -20,15 +21,16 @@ private:
     int char_mr;
     Item* inventory[MAX_INVENTORY_SIZE];
 
-protected:
-
 public:
     //Konstruktoren der Class "Character"
+
+    /*
     //Default
     Character() : char_name("Default-Character")
     {
         std::cout << "Konstruktor: " << char_name << std::endl;
     }
+    */
 
     //Individueller Konstruktor
     Character(const std::string &name, int health, int gold, int armor, int mr)
@@ -51,6 +53,10 @@ public:
     virtual ~Character()
     {
         //std::cout << "Character::Destructor: " << char_name << std::endl;
+        for(int i = 0; i < MAX_INVENTORY_SIZE; ++i)
+        {
+            delete inventory[i];
+        }
     }
 
     //----------------------------- Objektfunktionen -----------------------------
