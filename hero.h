@@ -23,16 +23,8 @@ public:
 
     //Individueller Konstruktor
     Hero(const std::string &char_name, int char_health, int char_gold, int char_armor, int char_mr)
-            : Character(char_name, char_health, char_gold, char_armor, char_mr), typ(typeHero)
+            : Character(char_name, char_health, char_gold, char_armor, char_mr), hero_gear(), typ(typeHero)
     {
-        /* Equipment ist bereits mit "Item* hero_gear[MAX_EQUIPMENT_SIZE];" initiiert (Zeile 21)
-        //Initialisierung der Ausrüstung mit dem Default-Konstruktor aka "Default-Item" und "false"
-        for(int i = 0; i < MAX_EQUIPMENT_SIZE; i++)
-        {
-            this->hero_gear[i] = Item();
-        }
-        */
-
         std::cout << "Hero::Constructor: " << char_name << std::endl;
     }
 
@@ -53,7 +45,7 @@ public:
     //----------------------------- Objektfunktionen -----------------------------
     virtual void attack(Character *enemy) override;
 
-    int addEquipmentItem(const Item* item);
+    int addEquipmentItem(Item* item);
     Item* removeEquipmentItem(int slot);
 
     void sellItem(int index);
@@ -64,8 +56,5 @@ public:
     //Werden von der Elternklasse "Character" übernommen
     Item* getEquipment(int index);
 };
-
-//Operatorenüberladung des Operators "<<"
-std::ostream& operator<<(std::ostream& out, const Hero& hero);
 
 #endif //EXERCISE_4_HERO_H

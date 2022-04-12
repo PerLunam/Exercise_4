@@ -22,29 +22,23 @@ private:
     Item* inventory[MAX_INVENTORY_SIZE];
 
 public:
-    //Konstruktoren der Class "Character"
-
-    /*
-    //Default
-    Character() : char_name("Default-Character")
-    {
-        std::cout << "Konstruktor: " << char_name << std::endl;
-    }
-    */
+    //Konstruktor der Class "Character"
 
     //Individueller Konstruktor
     Character(const std::string &name, int health, int gold, int armor, int mr)
-            : char_name(name), char_health(health), char_gold(gold), char_armor(armor), char_mr(mr)
+            : char_name(name), char_health(health), char_gold(gold), char_armor(armor), char_mr(mr), inventory()
     {
-        /* Inventory ist bereits mit "Item* inventory[MAX_INVENTORY_SIZE];" initiiert (Zeile 21)
-        //Initialisierung des Inventars mit dem Default-Konstruktor aka "Default-Item" und "false"
-        for(int i = 0; i < MAX_INVENTORY_SIZE; i++)
+        //Exception, falls kein Name bei der Initialisierung angegeben wurde
+        if(name.empty())
         {
-            //FEHLER - Pointer korrekt setzen
-            &this->inventory[i];
-            this->inventory[i] = Item();
+            throw InvalidArgumentException("Character:Character: Bitte gib einen Namen ein.");
         }
-        */
+
+        //Exception, falls ein negativer Wert bei der Initialisierung angegeben wurde
+        if(health < 0 || gold < 0 || armor < 0 || mr < 0)
+        {
+            throw InvalidArgumentException("Character::Character: Bitte gib einen Wert größer oder gleich 0 ein.");
+        }
 
         //std::cout << "Character::Constructor: " << char_name << std::endl;
     }
@@ -64,7 +58,7 @@ public:
 
     bool fight(Character *enemy);
 
-    int addInventarItem(const Item *item);
+    int addInventarItem(Item *item);
     Item* removeInventarItem(int slot);
 
     virtual enumType &getType() = 0;

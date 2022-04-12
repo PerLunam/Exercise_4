@@ -29,10 +29,3 @@ void Item::setValue(int newValue)
         this->item_value = newValue;
     }
 }
-
-//Operatorenüberladung des Operators "<<"
-std::ostream& operator<<(std::ostream& out, const Item& item)
-{
-    out << "Gegenstand " << item.getName() << " mit einem Wert von " << item.getValue() << " .";
-    return out;
-}

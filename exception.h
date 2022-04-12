@@ -37,4 +37,11 @@ public:
     using GameException::GameException;
 };
 
+//Exception, sofern bei der Eingabe ein ungültiges Argument übergeben wurde
+class InvalidArgumentException : public GameException
+{
+public:
+    using GameException::GameException;
+};
+
 #endif //EXERCISE_4_EXCEPTION_H

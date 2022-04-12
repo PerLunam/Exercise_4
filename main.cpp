@@ -15,6 +15,8 @@ int main()
 
     try
     {
+        //Hero testing("Test", -100, 0, 15, 10);
+
         //Initialize Hero Annina und vier Items
         Hero annina("Annina", 700, 200, 15, 10);
         annina.addInventarItem( new Item("Riesenschwert", 70));

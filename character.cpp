@@ -29,17 +29,18 @@ bool Character::fight(Character *enemy)
     return this->getHealth() > 0;
 }
 
-/*
-int Character::addInventarItem(const Item* item)
+
+int Character::addInventarItem(Item* item)
 {
-    for(int i = 0; i < MAX_INVENTORY_SIZE; i++)
+    for(int i = 0; i < MAX_INVENTORY_SIZE; ++i)
     {
         //Prüfung, ob Index auf "nullptr" zeigt oder auf eine gültige Speicheradresse
         //bei "false" zeigt der Index auf "nullptr" und wird nun korrekt initialisiert
         if(!this->inventory[i])
         {
-            this->inventory[i]->setName(item->getName());
-            this->inventory[i]->setValue(item->getValue());
+            this->inventory[i] = item;
+            //this->inventory[i]->setName(item->getName());
+            //this->inventory[i]->setValue(item->getValue());
 
             //Bei erfolgreicher Platzierung soll der Index des Items ausgegeben werden
             return i;
@@ -48,11 +49,11 @@ int Character::addInventarItem(const Item* item)
     //Exception, falls alle Plätze belegt sind
     throw InventarFullException("Character::addInventarItem(): Inventar ist bereits komplett belegt.");
 }
-*/
 
+/*
 int Character::addInventarItem(const Item *item)
 {
-    for(int i = 0; i < MAX_INVENTORY_SIZE; i++)
+    for(int i = 0; i < MAX_INVENTORY_SIZE; ++i)
     {
         if(!this->inventory[i])
         {
@@ -67,19 +68,19 @@ int Character::addInventarItem(const Item *item)
         }
     }
 }
+*/
 
 Item* Character::removeInventarItem(int slot)
 {
-    if(slot < 0 && slot > MAX_INVENTORY_SIZE)
+    if(slot < 0 || slot > MAX_INVENTORY_SIZE)
     {
         //Passende Exception, wenn der eingegebene Indexwert außerhalb des Wertebereichs liegt
-        //TODO - warum kann "throw" nicht ausgeführt werden
         throw InvalidIndexException("Character::removeInventarItem(): Der angegebene Indexwert liegt außerhalb des gültigen Wertebereichs.");
     } else if(this->inventory[slot])
     {
         //Überschreiben des Slots mit "nullptr" mithilfe einer zusätzlichen Variablen "retValue"
         Item* retValue = this->inventory[slot];
-        retValue = nullptr;
+        this->inventory[slot] = nullptr;
         return retValue;
     } else
     {
@@ -113,7 +114,6 @@ Item* Character::retrieveRandomLoot(Character *enemy)
         //und dem Inventar des Helden/ der Heldin beigefügt werden ("addInventarItem")
 
         //Erster Versuch der Umsetzung, aber mit Fehler
-        //TODO - Funktion erneut testen
         //this->addInventarItem(enemy->removeInventarItem(rndNumber));
 
         //Zweiter Versuch der Umsetzung
@@ -141,7 +141,6 @@ Item* Character::retrieveRandomLoot(Character *enemy)
         std::cout << "------------------------------" << std::endl;
 
         throw InventarFullException("Character::retrieveRandomLoot(): Inventar ist bereits komplett belegt.");
-        //return Item();
     }
 }
 
@@ -234,8 +233,7 @@ Item* Character::getInventory(int index)
         return this->inventory[index];
     } else
     {
-        //Falls ein unpassender Index angegeben wurde, wird "nullptr" zurückgegeben
-        return nullptr;
+        throw InvalidIndexException("Character::getInventory(): Der angegebene Indexwert liegt außerhalb des gültigen Wertebereichs.");
     }
 
 }

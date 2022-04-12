@@ -11,13 +11,7 @@ private:
     int item_value;
 
 public:
-    //Konstruktoren der Class "Item"
-
-    //Default
-    Item() : item_name("Default-Item"), item_value(0)
-    {
-        std::cout << "Calling Item::Default-Constructor" << item_name << std::endl;
-    }
+    //Konstruktor der Class "Item"
 
     //Individueller Konstruktor
     Item(const std::string &name, int value)
@@ -39,8 +33,5 @@ public:
     int getValue() const;
     void setValue(int newValue);
 };
-
-//Operatorenüberladung des Operators "<<"
-std::ostream& operator<<(std::ostream& out, const Item& item);
 
 #endif //EXERCISE_4_ITEM_H
