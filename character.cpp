@@ -238,9 +238,20 @@ Item* Character::getInventory(int index)
 
 }
 
+void Character::setNullptrItem(Item* item)
+{
+    if(!item)
+    {
+        throw InvalidItemException("Character::setNullptrItem: Fehlerhaft initiertes Item.");
+    } else
+    {
+        item = nullptr;
+    }
+}
+
 //Operatorenüberladung des Operators "<<"
 std::ostream& operator<<(std::ostream& out, const Character& character)
 {
-    out << character.getName() << " mit " << character.getHealth() << " Lebenspunkten, " << character.getArmor() << " Rüstungspunkte, " << character.getMR() << " Magieresistenz und " << character.getGold() << " Gold.";
+    out << "Hero " << character.getName() << " (mit " << character.getHealth() << " Lebenspunkten und " << character.getGold() << " Gold)";
     return out;
 }

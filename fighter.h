@@ -25,7 +25,7 @@ public:
     virtual ~Fighter()
     {
         //Grafische Trennung der Inhalte
-        std::cout << "------------------------------" << std::endl;
+        //std::cout << "------------------------------" << std::endl;
 
         std::cout << "Fighter " << this->getName() << " verlässt das Abenteuer und ärgert andere Held*Innen." << std::endl;
     }

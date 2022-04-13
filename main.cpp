@@ -54,15 +54,11 @@ int main()
             {
                 annina.retrieveRandomLoot(&pascal);
 
-                //Erster Ansatz - Verwendung der "sellItem"-Funktion innerhalb einer nested Loop
-                for(int i = 0; i < MAX_INVENTORY_SIZE; ++i)
+                for(int k = 0; k < MAX_INVENTORY_SIZE; ++k)
                 {
-                    for (int j = 0; j < MAX_EQUIPMENT_SIZE; ++j)
-                    {
-                        annina.sellItem(j);
-                    }
-                    annina.sellItem(i);
+                    annina.sellItem(k);
                 }
+
             }
         } else
         {

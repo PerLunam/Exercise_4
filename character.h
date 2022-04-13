@@ -51,6 +51,9 @@ public:
         {
             delete inventory[i];
         }
+
+        //Grafische Trennung der Inhalte
+        std::cout << "------------------------------" << std::endl;
     }
 
     //----------------------------- Objektfunktionen -----------------------------
@@ -82,6 +85,7 @@ public:
     void setMR(int newMR);
 
     Item* getInventory(int index);
+    void setNullptrItem(Item* item);
 };
 
 //Operatorenüberladung des Operators "<<"

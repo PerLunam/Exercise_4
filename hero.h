@@ -37,7 +37,7 @@ public:
         }
 
         //Grafische Trennung der Inhalte
-        std::cout << "------------------------------" << std::endl;
+        //std::cout << "------------------------------" << std::endl;
 
         std::cout << *this << " verabschiedet sich und geht voller Stolz der untergehenden Sonne entgegen." << std::endl;
     }
