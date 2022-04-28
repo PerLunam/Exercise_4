@@ -8,7 +8,7 @@
 #define MAX_EQUIPMENT_SIZE 2
 
 //Forward-Declaration der Class "NPC"
-class NPC;
+//class NPC;
 
 class Hero : public Character
 {
